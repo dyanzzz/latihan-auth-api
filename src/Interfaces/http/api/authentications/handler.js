@@ -1,4 +1,5 @@
 const LoginUserUseCase = require('../../../../Applications/use_case/LoginUserUseCase');
+const RefreshAuthenticationUseCase = require('../../../../Applications/use_case/RefreshAuthenticationUseCase');
 
 class AuthenticationsHandler {
   constructor(container) {
@@ -24,8 +25,16 @@ class AuthenticationsHandler {
     return response;
   }
 
-  async putAuthenticationHandler() {
+  async putAuthenticationHandler(request) {
+    const refreshAuthenticationUseCase = this._container.getInstance(RefreshAuthenticationUseCase.name);
+    const accessToken = await refreshAuthenticationUseCase.execute(request.payload);
 
+    return {
+      status: 'success',
+      data: {
+        accessToken
+      },
+    };
   }
 
   async deleteAuthenticationHandler() {

@@ -123,5 +123,141 @@ describe('/authentications endpoint', () => {
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toEqual('harus mengirimkan username dan password');
     });
-  })
-})
+
+    it('should response 400 if login payload wrong data type', async () => {
+      // Arrange
+      const requestPayload = {
+        username: 123,
+        password: 'secret',
+      };
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: requestPayload,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(400);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual('username dan password harus string');
+    });
+  });
+
+  describe('when PUT /authentications', () => {
+    it('should return 200 and new access token', async () => {
+      // arrange
+      const server = await createServer(container)
+      // add user
+      await server.inject({
+        method: 'POST',
+        url: '/users',
+        payload: {
+          username: 'dicoding',
+          password: 'secret',
+          fullname: 'Dicoding indonesia'
+        },
+      });
+
+      // login user
+      const loginUser = await server.inject({
+        method: 'POST',
+        url: '/authentications',
+        payload: {
+          username: 'dicoding',
+          password: 'secret'
+        },
+      });
+
+      const { data: { refreshToken } } = JSON.parse(loginUser.payload)
+
+      // action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/authentications',
+        payload: { refreshToken }
+      });
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(200)
+      expect(responseJson.status).toEqual('success')
+      expect(responseJson.data.accessToken).toBeDefined()
+    });
+
+    it('should return 400 payload not contain refresh token', async () => {
+      // arrange
+      const server = await createServer(container)
+
+      // action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/authentications',
+        payload: {}
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(400)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('harus mengirimkan token refresh')
+    });
+
+    it('should return 400 if refresh token not string', async () => {
+      // arrange
+      const server = await createServer(container)
+
+      // action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/authentications',
+        payload: {
+          refreshToken: 123
+        }
+      });
+
+      // assert
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(400)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('refresh token harus string')
+    });
+
+    it('should return 400 if refresh token not valid', async () => {
+      const server = await createServer(container)
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/authentications',
+        payload: {
+          refreshToken: 'invalid_refresh_token'
+        }
+      });
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(400)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('refresh token tidak valid')
+    });
+
+    it('should return 400 if refresh token not registered in database', async () => {
+      const server = await createServer(container)
+      const refreshToken = await container.getInstance(AuthenticationTokenManager.name).createRefreshToken({ username: 'dicoding' })
+
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/authentications',
+        payload: {
+          refreshToken
+        }
+      });
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(400)
+      expect(responseJson.status).toEqual('fail')
+      expect(responseJson.message).toEqual('Token tidak tersedia')
+    });
+  });
+
+  
+});

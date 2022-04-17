@@ -1,5 +1,6 @@
 const LoginUserUseCase = require('../../../../Applications/use_case/LoginUserUseCase');
 const RefreshAuthenticationUseCase = require('../../../../Applications/use_case/RefreshAuthenticationUseCase');
+const LogoutUserUseCase = require('../../../../Applications/use_case/LogoutUserUseCase');
 
 class AuthenticationsHandler {
   constructor(container) {
@@ -37,8 +38,13 @@ class AuthenticationsHandler {
     };
   }
 
-  async deleteAuthenticationHandler() {
-
+  async deleteAuthenticationHandler(request) {
+    const logoutUserUseCase = this._container.getInstance(LogoutUserUseCase.name)
+    await logoutUserUseCase.execute(request.payload)
+    return {
+      status: 'success',
+      message: 'berhasil logout & token berhasil didelete'
+    }
   }
 }
 

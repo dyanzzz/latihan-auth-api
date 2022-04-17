@@ -22,6 +22,7 @@ const LoginUserUseCase = require('../Applications/use_case/LoginUserUseCase');
 const AuthenticationRepository = require('../Domains/authentications/AuthenticationRepository');
 const AuthenticationRepositoryPostgres = require('./repository/AuthenticationRepositoryPostgres');
 const RefreshAuthenticationUseCase = require('../Applications/use_case/RefreshAuthenticationUseCase');
+const LogoutUserUseCase = require('../Applications/use_case/LogoutUserUseCase');
 
 // creating container
 const container = createContainer();
@@ -121,7 +122,6 @@ container.register([
       ],
     },
   },
-  ,
   {
     key: RefreshAuthenticationUseCase.name,
     Class: RefreshAuthenticationUseCase,
@@ -135,6 +135,19 @@ container.register([
         {
           name: 'authenticationTokenManager',
           internal: AuthenticationTokenManager.name,
+        },
+      ],
+    },
+  },
+  {
+    key: LogoutUserUseCase.name,
+    Class: LogoutUserUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'authenticationRepository',
+          internal: AuthenticationRepository.name,
         },
       ],
     },

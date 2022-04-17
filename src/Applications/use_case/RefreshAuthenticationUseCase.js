@@ -10,7 +10,6 @@ class RefreshAuthenticationUseCase {
   async execute(useCasePayload) {
     this._verifyPayload(useCasePayload)
     const { refreshToken } = useCasePayload
-    console.log(refreshToken)
 
     await this._authenticationTokenManager.verifyRefreshToken(refreshToken)
     await this._authenticationRepository.checkAvailabilityToken(refreshToken)

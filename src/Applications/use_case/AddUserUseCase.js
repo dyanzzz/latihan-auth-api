@@ -13,5 +13,5 @@ class AddUserUseCase {
     return this._userRepository.addUser(registerUser);
   }
 }
- 
+
 module.exports = AddUserUseCase;

@@ -27,15 +27,15 @@ jobs:
           npm run test
         env:
           CI: true
-          PGHOST_TEST: ${{ secret.PGHOST_TEST }}
-          PGUSER_TEST: ${{ secret.PGUSER_TEST }}
-          PGDATABASE_TEST: ${{ secret.PGDATABASE }}
-          PGPASSWORD_TEST: ${{ secret.PGPASSWORD_TEST }}
-          PGPORT_TEST: ${{ secret.PGPORT_TEST }}
-          PGHOST: ${{ secret.PGHOST_TEST }}
-          PGUSER: ${{ secret.PGUSER_TEST }}
-          PGDATABASE: ${{ secret.PGDATABASE_TEST }}
-          PGPASSWORD: ${{ secret.PGPASSWORD_TEST }}
-          PGPORT: ${{ secret.PGPORT_TEST }}
-          ACCESS_TOKEN_KEY: ${{ secret.ACCESS_TOKEN_KEY }}
-          REFRESH_TOKEN_KEY: ${{ secret.REFRESH_TOKEN_KEY }}
+          PGHOST_TEST: ${{ secrets.PGHOST_TEST }}
+          PGUSER_TEST: ${{ secrets.PGUSER_TEST }}
+          PGDATABASE_TEST: ${{ secrets.PGDATABASE }}
+          PGPASSWORD_TEST: ${{ secrets.PGPASSWORD_TEST }}
+          PGPORT_TEST: ${{ secrets.PGPORT_TEST }}
+          PGHOST: ${{ secrets.PGHOST_TEST }}
+          PGUSER: ${{ secrets.PGUSER_TEST }}
+          PGDATABASE: ${{ secrets.PGDATABASE_TEST }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD_TEST }}
+          PGPORT: ${{ secrets.PGPORT_TEST }}
+          ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
+          REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}

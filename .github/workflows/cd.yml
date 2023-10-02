@@ -18,7 +18,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          cd ~/auth-api
+          cd ~/latihan-auth-api
           git pull origin master
           npm audit fix --force
           npm install

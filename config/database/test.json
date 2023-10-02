@@ -1,7 +1,7 @@
 {
-    "user": "developer",
-    "password": "rahasia",
-    "host": "localhost",
+    "user": "postgres",
+    "password": "Adminqwert1",
+    "host": "pgsql-aws.cvlmlpvsyn78.ap-southeast-1.rds.amazonaws.com",
     "port": 5432,
     "database": "authapi_test"
 }
